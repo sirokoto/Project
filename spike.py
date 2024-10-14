@@ -18,10 +18,10 @@ class Spike:
         self.speed_increment = 0.5
 
         if position == 'left':
-            self.rect.centerx -= 48
+            self.rect.centerx -= 40
             self.image_to_draw = self.image
         elif position == 'right':
-            self.rect.centerx += 48
+            self.rect.centerx += 40
             self.image_to_draw = self.flipped_image
 
     def spawn(self):
