@@ -1,5 +1,5 @@
 import pygame
-
+logo = ".\\assets\\Icon.png"
 running = True
 SCREEN_WIDTH=512
 SCREEN_HEIGHT=768

@@ -11,11 +11,12 @@ class Spike:
         # Шипы должны быть по центру столба (совпадает с центром экрана)
         self.rect.centerx = SCREEN_WIDTH // 2
         self.rect.y = -self.rect.height  # Стартовое положение шипов сверху
-        self.base_speed_y = 5
+        self.base_speed_y = 10
         self.speed_y = self.base_speed_y  # Скорость движения шипов
         self.position = position
         self.is_active = False
-        self.speed_increment = 0.5
+        self.base_speed_increment = 1
+        self.speed_increment = self.base_speed_increment
 
         if position == 'left':
             self.rect.centerx -= 40
