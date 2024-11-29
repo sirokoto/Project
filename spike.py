@@ -1,49 +1,49 @@
-from random import random
+import random
 from configs import SCREEN_WIDTH, SCREEN_HEIGHT
-import pygame
+from pygame import image
 
 class Spike:
-    def __init__(self, screen, position="left"):
+    def __init__(self, screen):
         self.screen = screen
-        self.image = pygame.image.load(".\\assets\\sprites\\spike.png")
-        self.flipped_image = pygame.transform.flip(self.image, True, False)
+        self.image = image.load("sprites\\spike.png")
         self.rect = self.image.get_rect()
-        # Шипы должны быть по центру столба (совпадает с центром экрана)
-        self.rect.centerx = SCREEN_WIDTH // 2
-        self.rect.y = -self.rect.height  # Стартовое положение шипов сверху
+        self.rect.y = -self.rect.height  # Start off-screen
+        self.spike_pos_options = ["left", "right"]
+        self.spike_pos = self.spike_pos_options[0]
+        self.choose_pos()  # Choose initial spike position
         self.base_speed_y = 10
-        self.speed_y = self.base_speed_y  # Скорость движения шипов
-        self.position = position
+        self.speed_y = self.base_speed_y
         self.is_active = False
         self.base_speed_increment = 1
         self.speed_increment = self.base_speed_increment
 
-        if position == 'left':
-            self.rect.centerx -= 40
-            self.image_to_draw = self.image
-        elif position == 'right':
-            self.rect.centerx += 40
-            self.image_to_draw = self.flipped_image
+    def choose_pos(self):
+        """Randomly choose the spike position (left or right) and set rect center accordingly."""
+        self.spike_pos = random.choice(self.spike_pos_options)
+        if self.spike_pos == 'left':
+            self.rect.centerx = SCREEN_WIDTH // 2 - 40
+        else:
+            self.rect.centerx = SCREEN_WIDTH // 2 + 40
 
-    def spawn(self):
-        self.is_active = True
-        self.rect.y = -self.rect.height
-
-    def update(self, other_spike):
-        if not self.is_active and not other_spike.is_active and random() < 0.5:
+    def update(self):
+        """Update the position of the spike and reset if it goes off-screen."""
+        if not self.is_active:
+            # Reactivate the spike with a 50% chance
             self.is_active = True
+            self.choose_pos()  # Reposition the spike when it reactivates
+            self.rect.y = -self.rect.height
 
         if self.is_active:
             self.rect.y += self.speed_y
+            # If the spike moves off the bottom of the screen, deactivate it
             if self.rect.top > SCREEN_HEIGHT:
-                self.rect.y = -self.rect.height
                 self.is_active = False
+
     def draw(self):
+        """Draw the spike on the screen if active."""
         if self.is_active:
-            self.screen.blit(self.image_to_draw, self.rect)
+            self.screen.blit(self.image, self.rect)
 
-    def check_collision(self, player_rect):
-        return self.is_active and self.rect.colliderect(player_rect)  # Проверка столкновения с игроком
-
-    def increase_speed_by_time(self):
+    def increase_speed(self):
+        """Increase the speed of the spike's downward movement."""
         self.speed_y += self.speed_increment
