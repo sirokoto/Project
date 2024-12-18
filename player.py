@@ -1,23 +1,22 @@
 import pygame
-from configs import SCREEN_HEIGHT, SCREEN_WIDTH, event_list
+from pygame import KEYDOWN
 
+from configs import SCREEN_HEIGHT, SCREEN_WIDTH, event_list
 
 class Player:
     def __init__(self, screen):
         self.screen = screen
         pygame.mixer.init()
-        self.jump_sound = pygame.mixer.Sound('sounds\\jump.wav')
+        self.jump_sound = pygame.mixer.Sound('assets\\sounds\\jump.wav')
         self.jump_sound.set_volume(0.25)
-        self.image = pygame.image.load("sprites\\player.png")
+        self.image = pygame.image.load("assets\\sprites\\player.png")
         self.image = pygame.transform.scale(
             self.image, (self.image.get_width() * 2, self.image.get_height() * 2)
         )
         self.flipped_image = pygame.transform.flip(self.image, True, False)
-
         self.rect = self.image.get_rect()
         self.rect.centerx = SCREEN_WIDTH // 2 - 40
         self.rect.bottom = SCREEN_HEIGHT // 2 + 250
-
 
         self.offset_x = 40
         self.on_left_side = True
@@ -53,8 +52,9 @@ class Player:
 
     def check_collision(self, spike_rect):
         """Checks if the player collides with the given spike rect."""
-        return self.rect.colliderect(spike_rect)
+        return pygame.rect.Rect.colliderect(self.rect, spike_rect)
 
     def reset_position(self):
         """Reset the player's position to its starting point."""
         self.rect.center = (SCREEN_WIDTH // 2 - 40, SCREEN_HEIGHT // 2 + 250)
+        self.on_left_side = True

@@ -1,38 +1,29 @@
 import random
+
+import pygame
+
 from configs import SCREEN_WIDTH, SCREEN_HEIGHT
 from pygame import image
 
-class Spike:
+class Spike(pygame.sprite.Sprite):
     def __init__(self, screen):
+        super().__init__()
         self.screen = screen
-        self.image = image.load("sprites\\spike.png")
+        self.image = image.load("assets\\sprites\\spike.png")
         self.rect = self.image.get_rect()
         self.rect.y = -self.rect.height  # Start off-screen
-        self.spike_pos_options = ["left", "right"]
-        self.spike_pos = self.spike_pos_options[0]
-        self.choose_pos()  # Choose initial spike position
         self.base_speed_y = 10
         self.speed_y = self.base_speed_y
         self.is_active = False
-        self.base_speed_increment = 1
-        self.speed_increment = self.base_speed_increment
 
     def choose_pos(self):
         """Randomly choose the spike position (left or right) and set rect center accordingly."""
-        self.spike_pos = random.choice(self.spike_pos_options)
-        if self.spike_pos == 'left':
-            self.rect.centerx = SCREEN_WIDTH // 2 - 40
-        else:
-            self.rect.centerx = SCREEN_WIDTH // 2 + 40
-
+        self.rect.centerx = random.choice([
+            SCREEN_WIDTH // 2 - 40,
+            SCREEN_WIDTH // 2 + 40
+        ])
     def update(self):
         """Update the position of the spike and reset if it goes off-screen."""
-        if not self.is_active:
-            # Reactivate the spike with a 50% chance
-            self.is_active = True
-            self.choose_pos()  # Reposition the spike when it reactivates
-            self.rect.y = -self.rect.height
-
         if self.is_active:
             self.rect.y += self.speed_y
             # If the spike moves off the bottom of the screen, deactivate it
@@ -46,4 +37,10 @@ class Spike:
 
     def increase_speed(self):
         """Increase the speed of the spike's downward movement."""
-        self.speed_y += self.speed_increment
+        self.speed_y += 1
+
+    def reset(self, y_offset=0, side=None):
+        self.rect.y = y_offset
+        if side: self.rect.centerx = SCREEN_WIDTH // 2 - 40 if side == 'left' else SCREEN_WIDTH // 2 + 40
+        else: side = self.choose_pos()
+        self.is_active = True
