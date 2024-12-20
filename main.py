@@ -1,10 +1,8 @@
 import random
 import pygame
-from pygame.examples.cursors import image
-
 from button import Button
 from spike import Spike
-from configs import SCREEN,FPS, FONT, CLOCK, SCREEN_HEIGHT, NUM_SPIKES, MIN_VERT_SPACING, SCREEN_WIDTH
+from configs import SCREEN,FPS, FONT, CLOCK, SCREEN_HEIGHT, NUM_SPIKES, MIN_VERT_SPACING, SCREEN_WIDTH, game_over
 from PlayerPrefs import *
 from player import Player
 from tileset import Tileset
@@ -22,7 +20,6 @@ tmap = Tilemap(tset)
 spikes = [Spike(SCREEN) for _ in range(NUM_SPIKES)]
 
 # Game variables
-#pygame.mixer.music.load("assets\\sounds\\An Enigmatic Encounter.wav", "MemeMainGame")
 score = 0
 speed_increase_interval = 5000
 last_speed_increase_time = pygame.time.get_ticks()
@@ -77,11 +74,7 @@ def game():
     pygame.mixer_music.play(-1)
     while True:
         current_time = pygame.time.get_ticks()
-
-        # Handle events
         events(player)
-
-        # Clear the screen
         SCREEN.blit(bg, (0,0))
 
         # Increase spike speed periodically
@@ -125,6 +118,7 @@ def game():
         # Update the display
         pygame.display.update()
         CLOCK.tick(FPS)
+
 def score_menu():
     while True:
         SCREEN.blit(mmbg, (0,0))
@@ -147,4 +141,5 @@ def score_menu():
                 if BACK_BUTTON.checkForInput(mmpos):
                     main_menu()
         pygame.display.update()
+
 main_menu()
