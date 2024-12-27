@@ -14,7 +14,7 @@ class Spike(pygame.sprite.Sprite):
         self.is_active = False
 
     def reset(self, y_offset=0, side=None):
-        self.rect.y = y_offset
+        self.rect.y -= y_offset
         if side == 'left': self.rect.centerx = configs.SCREEN_WIDTH // 2 - 40
         elif side == 'right':  self.rect.centerx = configs.SCREEN_WIDTH // 2 + 40
         self.is_active = True
@@ -35,5 +35,6 @@ class Spike(pygame.sprite.Sprite):
         """Draw the spike on the screen if active."""
         if self.is_active:
             self.screen.blit(self.image, self.rect)
+            print("agu")
     def increase_speed(self): self.speed_y += .1
 

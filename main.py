@@ -101,7 +101,7 @@ def game():
                 if not spike.is_active or spikes[i].rect.top > SCREEN_HEIGHT:
                     if random.random() < 0.01:
                         side = 'left' if i % 2 == 0 else 'right'
-                        y_offset = -MIN_VERT_SPACING - player.rect.height - 90
+                        y_offset = MIN_VERT_SPACING
                         spikes[i].reset(y_offset=y_offset, side=side)
                 if spike.is_active and player.check_collision(spike.rect):
                     game_over = True
